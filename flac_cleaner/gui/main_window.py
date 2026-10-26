@@ -10,7 +10,8 @@ from PySide6.QtGui import QDesktopServices, QKeySequence, QShortcut
 from PySide6.QtWidgets import (QAbstractItemView, QButtonGroup, QCheckBox, QComboBox, QFileDialog, QFormLayout,
                                QFrame, QGroupBox, QHBoxLayout, QHeaderView, QInputDialog, QLabel, QLineEdit,
                                QMainWindow, QMessageBox, QPlainTextEdit, QProgressBar, QPushButton, QRadioButton,
-                               QScrollArea, QSpinBox, QSplitter, QTableView, QToolButton, QVBoxLayout, QWidget)
+                               QScrollArea, QSpinBox, QSplitter, QTabWidget, QTableView, QToolButton, QVBoxLayout,
+                               QWidget)
 
 from .. import APP_NAME, __version__, audio, presets, processor
 from ..cover import COVER_SIZES, image_info
@@ -277,7 +278,12 @@ class MainWindow(QMainWindow):
         lay.addLayout(top)
         lay.addWidget(split, 1)
         lay.addLayout(bottom)
-        self.setCentralWidget(central)
+        self.tabs = QTabWidget()
+        self.tabs.addTab(central, "Clean files")
+        from .download_tab import DownloadTab
+        self.download_tab = DownloadTab(self)
+        self.tabs.addTab(self.download_tab, "Search && Download")
+        self.setCentralWidget(self.tabs)
 
         # signals
         self.btn_add.clicked.connect(self.add_files_dialog)
@@ -701,7 +707,7 @@ class MainWindow(QMainWindow):
         self.update_cover_panel()
         msg = f"Cover {info.width}×{info.height} assigned to {len(rows)} track(s)"
         if info.side < 600:
-            msg += f" — warning: smaller than 600 px"
+            msg += " — warning: smaller than 600 px"
         self.status.setText(msg)
 
     def clear_cover_choice(self):
@@ -962,7 +968,8 @@ class MainWindow(QMainWindow):
             audio.find_tool("flac")
             audio.find_tool("metaflac")
         except audio.ToolMissing as e:
-            QTimer.singleShot(300, lambda: QMessageBox.critical(self, "Missing component", str(e)))
+            msg = str(e)
+            QTimer.singleShot(300, lambda: QMessageBox.critical(self, "Missing component", msg))
 
     def closeEvent(self, e):
         if self.busy():
@@ -972,5 +979,9 @@ class MainWindow(QMainWindow):
                 return
             self.task.cancel()
             self.task.wait(15000)
+        if not self.download_tab.confirm_close():
+            e.ignore()
+            return
         presets.save_last_settings(self.settings(), self.preset_box.currentText())
+        self.download_tab.shutdown()
         e.accept()

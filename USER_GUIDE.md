@@ -79,3 +79,54 @@ can't be overwritten or deleted.
 - The chosen cover is the most trustworthy match first, then the sharpest one (up to your resize
   target). Below a 60 % match nothing is embedded, and the preview shows "lookup found nothing".
 - If the online cover is not bigger than the one already in the file, the existing cover is kept.
+
+## Search & Download tab (Soulseek)
+
+1. **Log in.** Enter your Soulseek username and password and click **Log in**. If the username doesn't
+   exist yet, the Soulseek server creates it. Tick *Remember password* and *Log in at start* if you
+   want. The password is stored encrypted for your Windows account only.
+2. **Check the folders** at the bottom: *Original downloads* (raw files, shared with other users) and
+   *Cleaned files* (where the Ginkgo-format results go).
+3. **Search.** Type the artist and title (Song) or artist and album (Album), then press Enter or click
+   **Search && download**. For about 8 seconds the app collects results, ranks them and starts
+   downloading the best one. The top result is shown in bold.
+4. **Watch the Downloads list.** It shows queue position, progress and speed. If the uploader is
+   offline, fails, or keeps you queued for too long, the next best source is tried automatically.
+   When it says **Done**, the cleaned file is in *Cleaned files*. Double-click a row to see where it
+   was saved and the verification result.
+5. **Pick by hand** if you prefer: **Search only** lists the ranked results without downloading.
+   Double-click any result (also after an automatic download) to download that one instead.
+
+The cleanup uses the settings on the **Clean files** tab, so pick the preset there first.
+For HD covers, tick *Find HD covers online automatically* on that tab. If nothing is found online,
+the cover image from the uploader's folder is used.
+
+*Prefer* chooses between 16-bit (like the Ginkgo file) and 24-bit sources. If you prefer 16-bit but
+only 24-bit exists, it is still downloaded. Turn on *Convert 24-bit to 16-bit* on the Clean files tab
+if you want every file to end up 16-bit.
+
+Tips:
+- Allow FLAC Cleaner through Windows Firewall when asked. Otherwise some users can't send you files.
+- Keep *Share my downloads folder* on. Many Soulseek users won't upload to people who share nothing.
+- Only download music you're allowed to have.
+
+## Downloading a whole playlist or song list
+
+1. Get the list:
+   - **From Spotify:** go to [exportify.app](https://exportify.app), log in with Spotify and click
+     **Export** next to the playlist to get a `.csv` file. For an album or a playlist you don't own,
+     first open it in Spotify, press **Ctrl+A**, right-click → **Add to playlist → New playlist**, then
+     export that new playlist.
+   - **By hand:** type or paste one song per line as `Artist - Title`.
+2. On the **Search & Download** tab, click **Song list / playlist CSV…** (or drop the .csv onto the
+   tab). Check the songs in the preview. The *Spotify info* column shows which songs will get Spotify
+   tags and cover.
+3. Choose a sub-folder (it defaults to the playlist name) and click **Download N song(s)**.
+
+Each song gets its own search and its own best-scoring source, two at a time. With Spotify info,
+results whose length doesn't match the Spotify version are pushed down or dropped, and the cleaned files
+get Spotify's tags and 640×640 cover. Songs already in that folder are skipped, so you can run an
+updated playlist again and only the new songs are downloaded.
+
+Pasting `open.spotify.com/...` links directly doesn't work: Spotify only gives developer access to
+Premium accounts since February 2026, so use the CSV export instead.
